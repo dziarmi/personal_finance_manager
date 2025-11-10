@@ -164,8 +164,20 @@ namespace ConsoleApp74
                     }
                     else
                     {
+                        foreach (var t in transactions)
+                        {
+                            if (t.Type == "Income")
+                            {
+                                Balance -= t.Amount;
+                            }
+                            else
+                            {
+                                Balance += t.Amount;
+                            }
+                        }
                         transactions.RemoveAt(id);
                         Console.WriteLine("Transaction deleted succesfully!");
+                        ShowBalance();
                     }
                     
                 }
@@ -191,10 +203,22 @@ namespace ConsoleApp74
 
                     List<Transaction> loadedTransactions = JsonSerializer.Deserialize<List<Transaction>>(json);
 
+                    Balance = 0;
                     if(loadedTransactions != null)
                     {
                         transactions = loadedTransactions;
-                        Console.WriteLine("Tasks loaded successfully!");
+                        foreach(var t in loadedTransactions)
+                        {
+                            if(t.Type == "Income")
+                            {
+                                Balance += t.Amount;
+                            }
+                            else
+                            {
+                                Balance -= t.Amount;
+                            }
+                        }
+                        Console.WriteLine("Transactions loaded successfully!");
                     }
                     else
                     {
@@ -205,6 +229,8 @@ namespace ConsoleApp74
                 {
                     Console.WriteLine("File not found.");
                 }
+                ShowBalance();
+                ShowTransactions();
             }
 
         }
