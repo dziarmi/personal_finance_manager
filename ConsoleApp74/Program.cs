@@ -153,41 +153,40 @@ namespace ConsoleApp74
             public void DeleteTransaction()
             {
                 ShowTransactions();
-                
+
                 try
                 {
-                    Console.Write("Enter ID of the task you want to delete: ");
+                    Console.Write("Enter ID of the transaction you want to delete: ");
                     int id = Convert.ToInt32(Console.ReadLine()) - 1;
-                    if(transactions.Count <= id || id < 0)
+
+                    if (id < 0 || id >= transactions.Count)
                     {
                         Console.WriteLine("Invalid transaction number!");
+                        return;
                     }
-                    else
+
+                    transactions.RemoveAt(id);
+                    Console.WriteLine("Transaction deleted successfully!");
+
+                    // Teraz przelicz saldo od zera:
+                    Balance = 0;
+                    foreach (var t in transactions)
                     {
-                        foreach (var t in transactions)
-                        {
-                            if (t.Type == "Income")
-                            {
-                                Balance -= t.Amount;
-                            }
-                            else
-                            {
-                                Balance += t.Amount;
-                            }
-                        }
-                        transactions.RemoveAt(id);
-                        Console.WriteLine("Transaction deleted succesfully!");
-                        ShowBalance();
+                        if (t.Type == "Income")
+                            Balance += t.Amount;
+                        else
+                            Balance -= t.Amount;
                     }
-                    
+
+                    ShowBalance();
+                    ShowTransactions();
                 }
-                catch(FormatException e)
+                catch (FormatException)
                 {
                     Console.WriteLine("Invalid transaction number!");
                 }
-
-                ShowTransactions();
             }
+
 
             public void Save()
             {
